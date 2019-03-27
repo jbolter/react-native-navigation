@@ -136,8 +136,26 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
         resolveStartAppPromiseOnActivityResumed();
         NavigationApplication.instance.getActivityCallbacks().onActivityResumed(this);
         EventBus.instance.register(this);
-        IntentDataHandler.onPostResume(getIntent());
+        
+        //This causes issues with FCM initialNotification.  
+        //It wipes all the extras from the intent.
+        //IntentDataHandler.onPostResume(getIntent());
+        
+        
         NavigationApplication.instance.getEventEmitter().sendActivityResumed(getCurrentlyVisibleEventId());
+        
+        // Pass along FCM messages/notifications payload data.
+        if(IntentDataHandler.getIntentData() != null){
+            Intent i = getIntent();
+            Bundle extras = IntentDataHandler.getIntentData().getExtras();
+            if (extras != null) {
+                i.putExtras(extras);
+            }
+            setIntent(i);
+
+        }
+        
+        
     }
 
     private void resolveStartAppPromiseOnActivityResumed() {
