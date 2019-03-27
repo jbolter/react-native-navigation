@@ -26,6 +26,10 @@ class IntentDataHandler {
     static void saveIntentData(Intent intent) {
         IntentDataHandler.intent = intent;
     }
+    
+    static Intent getIntentData(){
+        return IntentDataHandler.intent;
+    }
 
     static void onPostResume(Intent intent) {
         if (hasIntentData()) {
